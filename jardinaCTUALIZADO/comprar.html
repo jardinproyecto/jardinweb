@@ -1,0 +1,351 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARDIN - Ramos</title>
+
+<style>
+body{
+  margin:0;
+  background:#fdeff4;
+  font-family:Poppins, sans-serif;
+  color:#5a4a42;
+  overflow-x:hidden;
+}
+
+/* LOGO GRANDE */
+.logo{
+  position:fixed;
+  top:10px;
+  left:20px;
+  height:120px;
+  z-index:1000;
+  cursor:pointer;
+  transition:0.35s;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+}
+.logo:hover{
+  transform:scale(1.15) rotate(-3deg);
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3));
+}
+
+/* CONTENEDOR */
+.container{
+  width:90%;
+  max-width:700px;
+  margin:auto;
+  padding-top:150px;
+}
+
+/* BOTÓN REGRESAR */
+.back-btn{
+  display:block;
+  width:200px;
+  margin:20px auto;
+  padding:12px;
+  text-align:center;
+  background:#f7dbe6;
+  color:#5a4a42;
+  font-weight:600;
+  border-radius:18px;
+  text-decoration:none;
+  transition:.3s;
+}
+.back-btn:hover{
+  background:#efc7d7;
+  transform:scale(1.05);
+}
+
+/* TARJETAS */
+.card{
+  background:#ffffffd9;
+  padding:22px;
+  border-radius:20px;
+  margin-top:20px;
+  border:2px solid #e8d6c8;
+  box-shadow:0 4px 10px #e7c8cf;
+  animation:fade .6s;
+}
+@keyframes fade{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+h2,h3{text-align:center;}
+
+/* INPUTS */
+select,input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:2px solid #d3b8ae;
+  margin-top:10px;
+  background:#fff7f9;
+}
+
+/* BOTONES */
+.btn{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:18px;
+  font-size:18px;
+  font-weight:600;
+  background:#f7dbe6;
+  margin-top:12px;
+  cursor:pointer;
+  transition:.3s;
+}
+.btn:hover{
+  transform:scale(1.05);
+  background:#efc7d7;
+}
+
+/* RAMO */
+.ramo-card{
+  margin-top:20px;
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 6px 14px rgba(0,0,0,0.1);
+  transition:.3s;
+}
+.ramo-card:hover{
+  transform:scale(1.04);
+}
+.ramo-card img{
+  width:100%;
+  height:450px; /* MÁS LARGO */
+  object-fit:cover;
+}
+.precio{
+  font-size:22px;
+  font-weight:bold;
+  margin:10px;
+}
+
+/* CARRITO */
+#carrito{
+  margin-top:25px;
+  background:#fff2f6;
+  padding:20px;
+  border-radius:20px;
+}
+.total{
+  font-size:22px;
+  font-weight:bold;
+  text-align:center;
+  margin-top:10px;
+}
+
+/* ANIMACIONES */
+.corazon{
+  position:fixed;
+  font-size:26px;
+  animation:flotar 2s forwards;
+}
+@keyframes flotar{
+  0%{opacity:1; transform:translateY(0)}
+  100%{opacity:0; transform:translateY(-150px)}
+}
+.petalo{
+  position:fixed;
+  top:-20px;
+  font-size:20px;
+  animation:caer linear infinite;
+}
+@keyframes caer{
+  0%{transform:translateY(-10px) rotate(0)}
+  100%{transform:translateY(110vh) rotate(360deg)}
+}
+
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<img src="logoo.png" class="logo">
+
+<audio id="bubbleSound" src="bubble.mp3"></audio>
+
+<!-- BOTÓN REGRESAR -->
+<a href="index.html" class="back-btn">⟵ Volver al Menú Principal</a>
+
+<div class="container">
+
+<h2>Selecciona el tamaño del ramo</h2>
+
+<div class="card">
+<select id="tamanoSeleccionado" onchange="mostrarRamos(); sonido();">
+<option value="">Elegir tamaño...</option>
+<option value="Chico">Chico</option>
+<option value="Mediano">Mediano</option>
+<option value="Grande">Grande</option>
+</select>
+</div>
+
+<div id="opcionesRamos" class="card hidden">
+<h3>Tipo de ramo</h3>
+<select id="ramoSeleccionado" onchange="mostrarPreview(); sonido();">
+<option value="">Selecciona...</option>
+</select>
+
+<div id="previewRamo" class="ramo-card hidden">
+<img id="imgRamo">
+<div class="precio" id="precioRamo"></div>
+</div>
+
+<h3>Cantidad</h3>
+<input type="number" id="cantidad" value="1" min="1">
+
+<button class="btn" onclick="agregarCarrito()">
+Añadir al carrito 🛍️
+</button>
+</div>
+
+<div id="carrito" class="hidden">
+<h3>Carrito</h3>
+<ul id="listaCarrito"></ul>
+<div class="total" id="totalCompra">Total: $0</div>
+<button class="btn" onclick="enviarWhatsApp()">
+Enviar pedido por WhatsApp 📲
+</button>
+</div>
+
+</div>
+
+<script>
+// INFO RAMOS
+const ramosInfo={
+Chico:[
+{nombre:"Fresas Chico",img:"ramochico.jpg",precio:250},
+{nombre:"Mangos Chico",img:"mangoschico.jpg",precio:300},
+{nombre:"Mandarinas Chico",img:"mandarinaschico.jpg",precio:280},
+],
+Mediano:[
+{nombre:"Fresas Mediano",img:"ramomediano.jpg",precio:450},
+{nombre:"Mangoas Mediano",img:"mangosmediano.jpg",precio:480},
+{nombre:"Mandarinasd Mediano",img:"mandarinasmediano.jpg",precio:470},
+],
+Grande:[
+{nombre:"Fresas Grande",img:"ramogrande.jpg",precio:650},
+{nombre:"Mangos Grande",img:"mangosgrande.jpg",precio:690},
+{nombre:"Mandarinas Grande",img:"mandarinasgrande.jpg",precio:670},
+],
+"BLOOM BOX":[
+{nombre:"Bloom Box Especial",img:"img/bloom_box.jpg",precio:850}
+]
+};
+
+const carrito=[];
+let total=0;
+
+// SONIDO BURBUJA
+function sonido(){iiiii     
+  document.getElementById("bubbleSound").play();
+}
+
+// MOSTRAR RAMOS SEGÚN TAMAÑO
+function mostrarRamos(){
+  const tamano=document.getElementById("tamanoSeleccionado").value;
+  const select=document.getElementById("ramoSeleccionado");
+  select.innerHTML="<option>Selecciona...</option>";
+  if(tamano){
+    ramosInfo[tamano].forEach(r=>{
+      const op=document.createElement("option");
+      op.value=r.nombre;
+      op.textContent=r.nombre;
+      select.appendChild(op);
+    });
+    document.getElementById("opcionesRamos").classList.remove("hidden");
+  }
+}
+
+// MOSTRAR IMAGEN + PRECIO
+function mostrarPreview(){
+  const tamano=tamanoSeleccionado.value;
+  const ramo=ramoSeleccionado.value;
+  const data=ramosInfo[tamano].find(r=>r.nombre===ramo);
+  if(!data) return;
+  imgRamo.src=data.img;
+  precioRamo.innerText="$"+data.precio;
+  previewRamo.classList.remove("hidden");
+}
+
+// AGREGAR AL CARRITO
+function agregarCarrito(){
+  sonido();
+  const tamano=tamanoSeleccionado.value;
+  const ramo=ramoSeleccionado.value;
+  const cantidad=parseInt(document.getElementById("cantidad").value);
+  const data=ramosInfo[tamano].find(r=>r.nombre===ramo);
+  const subtotal=data.precio*cantidad;
+  total+=subtotal;
+  carrito.push({texto:`${cantidad} x ${ramo} = $${subtotal}`});
+  actualizarCarrito();
+  corazones();
+}
+
+// ACTUALIZAR CARRITO
+function actualizarCarrito(){
+  listaCarrito.innerHTML="";
+  carrito.forEach((item,i)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`${item.texto} <button onclick="eliminar(${i})">❌</button>`;
+    listaCarrito.appendChild(li);
+  });
+  totalCompra.innerText="Total: $"+total;
+  document.getElementById("carrito").classList.remove("hidden");
+}
+
+// ELIMINAR ITEM
+function eliminar(i){
+  sonido();
+  const precio=parseInt(carrito[i].texto.split("$")[1]);
+  total-=precio;
+  carrito.splice(i,1);
+  actualizarCarrito();
+}
+
+// ENVIAR WHATSAPP
+function enviarWhatsApp(){
+  let mensaje="Pedido:%0A";
+  carrito.forEach(i=>{mensaje+=i.texto+"%0A";});
+  mensaje+="Total: $"+total;
+  window.open("https://wa.me/?text="+mensaje);
+}
+
+// ANIMACIONES CORAZONES
+function corazones(){
+  for(let i=0;i<4;i++){
+    const c=document.createElement("div");
+    c.className="corazon";
+    c.innerHTML="💗";
+    c.style.left=Math.random()*window.innerWidth+"px";
+    c.style.top=window.innerHeight+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2000);
+  }
+}
+
+// FLORES CAYENDO
+function petalos(){
+  const p=document.createElement("div");
+  p.className="petalo";
+  p.innerHTML="🌸";
+  p.style.left=Math.random()*window.innerWidth+"px";
+  p.style.animationDuration=(Math.random()*5+5)+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),10000);
+}
+setInterval(petalos,600);
+</script>
+
+</body>
+</html>

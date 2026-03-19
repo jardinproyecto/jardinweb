@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofertas - JARDIN</title>
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
+  background:#fdeff4;
+  color:#5a4a42;
+  overflow-x:hidden;
+}
+
+/* Marca superior */
+.marca{
+  position:fixed;
+  top:20px;
+  left:40px;
+  font-size:30px;
+  font-weight:700;
+  z-index:30;
+  letter-spacing:3px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.marca img{
+  width:55px;
+  height:auto;
+  border-radius:10px;
+  box-shadow:0 3px 6px #d8b8b8;
+}
+
+/* Menú superior */
+header{
+  position:fixed;
+  top:0;
+  right:0;
+  padding:20px 40px;
+  display:flex;
+  gap:40px;
+  background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(8px);
+  z-index:20;
+  font-size:18px;
+  font-weight:600;
+  border-bottom-left-radius:15px;
+}
+
+header a{
+  text-decoration:none;
+  color:#5a4a42;
+  transition:.3s;
+}
+
+header a:hover{
+  color:#b0897c;
+}
+
+/* Título */
+h2{
+  text-align:center;
+  margin-top:140px;
+  color:#7a5e54;
+  font-size:32px;
+}
+
+/* CONTENEDOR VIDEO */
+.video-container{
+  width:90%;
+  max-width:900px;
+  margin:40px auto 80px;
+  background:#ffffffcc;
+  padding:20px;
+  border-radius:25px;
+  border:2px solid #e8d6c8;
+  box-shadow:0 5px 12px #e7c8cf;
+}
+
+video{
+  width:100%;
+  border-radius:20px;
+  outline:none;
+  box-shadow:0 4px 8px #e7c8cf;
+}
+
+/* FLORES CAYENDO */
+.petalo{
+  position:fixed;
+  top:-20px;
+  font-size:20px;
+  animation:caer linear infinite;
+}
+@keyframes caer{
+  0%{transform:translateY(-10px) rotate(0)}
+  100%{transform:translateY(110vh) rotate(360deg)}
+}
+
+/* CORAZONES */
+.corazon{
+  position:fixed;
+  bottom:0;
+  font-size:28px;
+  animation:flotar 2s forwards;
+}
+@keyframes flotar{
+  0%{opacity:1; transform:translateY(0)}
+  100%{opacity:0; transform:translateY(-150px)}
+}
+
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<!-- SONIDO -->
+<audio id="bubbleSound" src="bubble.mp3"></audio>
+
+<!-- LOGO + MARCA IZQUIERDA -->
+<div class="marca">
+  <img src="logoo.png" alt="Logo JARDIN">
+  JARDIN
+</div>
+
+<header>
+  <a href="index.html">Inicio</a>
+  <a href="menu.html">Menú</a>
+  <a href="oferta.html">Oferta</a>
+</header>
+
+<h2>Video Comercial – JARDIN</h2>
+
+<!-- VIDEO -->
+<div class="video-container">
+  <video controls autoplay muted loop>
+    <source src="anuncio.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+</div>
+
+<script>
+/* -------- SONIDO BURBUJA -------- */
+function sonidoBurbuja(){
+  const sound=document.getElementById("bubbleSound");
+  sound.currentTime=0;
+  sound.play();
+}
+document.querySelectorAll("a,button,video").forEach(element=>{
+  element.addEventListener("click",sonidoBurbuja);
+});
+
+/* -------- PETALOS -------- */
+function petalos(){
+  const p=document.createElement("div");
+  p.className="petalo";
+  p.innerHTML="🌸";
+  p.style.left=Math.random()*window.innerWidth+"px";
+  p.style.animationDuration=(Math.random()*5+5)+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),10000);
+}
+setInterval(petalos,600);
+
+/* -------- CORAZONES -------- */
+function corazones(){
+  for(let i=0;i<3;i++){
+    const c=document.createElement("div");
+    c.className="corazon";
+    c.innerHTML="💗";
+    c.style.left=Math.random()*window.innerWidth+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2000);
+  }
+}
+document.addEventListener("click",corazones);
+</script>
+
+</body>
+</html>
