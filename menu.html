@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú de Ramos - JARDIN</title>
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
+  background:#fdeff4;
+  color:#5a4a42;
+  overflow-x:hidden;
+}
+
+/* Marca superior */
+.marca{
+  position:fixed;
+  top:20px;
+  left:40px;
+  font-size:30px;
+  font-weight:700;
+  z-index:30;
+  letter-spacing:3px;
+}
+
+/* Menú superior */
+header{
+  position:fixed;
+  top:0;
+  right:0;
+  padding:20px 40px;
+  display:flex;
+  gap:40px;
+  background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(8px);
+  z-index:20;
+  font-size:18px;
+  font-weight:600;
+  border-bottom-left-radius:15px;
+}
+
+header a{
+  text-decoration:none;
+  color:#5a4a42;
+  transition:.3s;
+}
+
+header a:hover{
+  color:#b0897c;
+}
+
+/* Título */
+h2{
+  text-align:center;
+  margin-top:100px;
+  color:#7a5e54;
+}
+
+/* ---------------- LOGO ARRIBA DEL CARRUSEL ---------------- */
+.logo-arriba{
+  width:180px;
+  margin:30px auto 20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo-arriba img{
+  width:100%;
+  height:auto;
+  border-radius:20px;
+  box-shadow:0 4px 8px #e7c8cf;
+}
+
+/* ---------------- CARRUSEL ---------------- */
+.carrusel-container{
+  position:relative;
+  width:95%;
+  max-width:900px;
+  margin:20px auto 80px;
+  overflow:hidden;
+  border-radius:20px;
+  border:2px solid #e8d6c8;
+  background:#ffffffd9;
+  box-shadow:0 4px 10px #e7c8cf;
+}
+
+.carrusel-slide{
+  display:flex;
+  transition:transform 0.5s ease;
+}
+
+.carrusel-slide img{
+  width:100%;
+  border-radius:20px;
+  object-fit:cover;
+  max-height:500px;
+}
+
+/* Botones carrusel */
+.btn-prev, .btn-next{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(255,255,255,0.7);
+  border:none;
+  padding:12px 20px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:28px;
+  z-index:10;
+  transition:.3s;
+}
+
+.btn-prev:hover, .btn-next:hover{
+  background:#f7dbe6;
+}
+
+.btn-prev{left:15px;}
+.btn-next{right:15px;}
+
+/* --------------------- FLORES CAYENDO --------------------- */
+.corazon{
+  position:fixed;
+  font-size:26px;
+  animation:flotar 2s forwards;
+}
+@keyframes flotar{
+  0%{opacity:1; transform:translateY(0)}
+  100%{opacity:0; transform:translateY(-150px)}
+}
+.petalo{
+  position:fixed;
+  top:-20px;
+  font-size:20px;
+  animation:caer linear infinite;
+}
+@keyframes caer{
+  0%{transform:translateY(-10px) rotate(0)}
+  100%{transform:translateY(110vh) rotate(360deg)}
+}
+
+.hidden{display:none;}
+
+</style>
+</head>
+<body>
+
+<!-- SONIDO -->
+<audio id="bubbleSound" src="bubble.mp3"></audio>
+
+<div class="marca">JARDIN</div>
+
+<header>
+<a href="index.html">Inicio</a>
+<a href="menu.html">Menú</a>
+<a href="#">Oferta</a>
+</header>
+
+<h2>Nuestros Ramos</h2>
+
+<!-- LOGO ARRIBA -->
+<div class="logo-arriba">
+  <img src="logoo.png" alt="Logo JARDIN">
+</div>
+
+<div class="carrusel-container">
+  <div class="carrusel-slide" id="carruselSlide">
+    <img src="mangosgrande.jpg" alt="Ramo 1">
+    <img src="ramogrande.jpg"alt="Ramo 2">
+    <img src="ramochico.jpg" alt="Ramo 3">
+    <img src="mandarinasmediano.jpg" alt="Ramo 4">
+  </div>
+
+  <button class="btn-prev">&#10094;</button>
+  <button class="btn-next">&#10095;</button>
+</div>
+
+<script>
+/* -------- SONIDO BURBUJA -------- */
+function sonidoBurbuja(){
+  const sound=document.getElementById("bubbleSound");
+  sound.currentTime=0;
+  sound.play();
+}
+document.querySelectorAll("a,button").forEach(element=>{
+  element.addEventListener("click",sonidoBurbuja);
+});
+
+/* -------- CARRUSEL -------- */
+const slide = document.getElementById("carruselSlide");
+const nextBtn = document.querySelector(".btn-next");
+const prevBtn = document.querySelector(".btn-prev");
+let index = 0;
+const total = slide.children.length;
+
+function showSlide(i){
+  slide.style.transform = `translateX(${-i*100}%)`;
+}
+
+nextBtn.addEventListener("click",()=>{
+  index=(index+1)%total;
+  showSlide(index);
+});
+prevBtn.addEventListener("click",()=>{
+  index=(index-1+total)%total;
+  showSlide(index);
+});
+// ANIMACIONES CORAZONES
+function corazones(){
+  for(let i=0;i<4;i++){
+    const c=document.createElement("div");
+    c.className="corazon";
+    c.innerHTML="💗";
+    c.style.left=Math.random()*window.innerWidth+"px";
+    c.style.top=window.innerHeight+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2000);
+  }
+}
+
+// FLORES CAYENDO
+function petalos(){
+  const p=document.createElement("div");
+  p.className="petalo";
+  p.innerHTML="🌸";
+  p.style.left=Math.random()*window.innerWidth+"px";
+  p.style.animationDuration=(Math.random()*5+5)+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),10000);
+}
+setInterval(petalos,600);
+</script>
+
+</body>
+</html>
